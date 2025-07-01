@@ -27,7 +27,7 @@ router.post("/", async (req: IRequest, env: Env, ctx: ExecutionContext)=>{
 })
 
 export default {
-	async fetch(request: IRequest, env: any, ctx: any){
+	async fetch(request: IRequest, env: any, ctx: ExecutionContext){
 		if(request.method == "POST"){
 			const isValid = await verifyDiscordRequest(
 				request,
