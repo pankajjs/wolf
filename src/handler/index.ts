@@ -1,7 +1,8 @@
 import { InteractionResponseType, InteractionType } from "discord-interactions";
 import { IRequest } from "itty-router";
-import { JsonResponse } from "./utils/dtos";
-import { HELLO } from "./commands";
+import { JsonResponse } from "../utils/dtos";
+import { HELLO } from "../commands";
+import { hello } from "./hello";
 
 export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext) => {
     const interaction = await req.json() as any;
@@ -15,14 +16,8 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
 
     if(interaction.type === InteractionType.APPLICATION_COMMAND){
         switch(interaction.data.name.toLowerCase()){
-            case HELLO.name.toLowerCase(): {
-                return new JsonResponse({
-                    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                    data : {
-                        content: `Hello <@${interaction.member.user.id}>, You have executed your first command.`
-                    }
-                })
-            }
+            case HELLO.name.toLowerCase():
+                return hello(interaction.member.user.id);
             default:
                 return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }
