@@ -1,7 +1,7 @@
 import { InteractionResponseType, InteractionType } from "discord-interactions";
 import { IRequest } from "itty-router";
-import { JsonResponse } from "../utils/dtos";
-import { HELLO } from "../commands";
+import { JsonResponse } from "../dtos/response";
+import { HELLO } from "../dtos/commands";
 import { hello } from "./hello";
 
 export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext) => {

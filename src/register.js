@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { HELLO } from "./commands";
+import { HELLO } from "./dtos/commands";
 
 dotenv.config();
 
