@@ -1,7 +1,9 @@
-import dotenv from "dotenv";
-import { HELLO } from "./dtos/commands";
+const dotenv = require("dotenv");
+const { HELLO } = require("./dtos/commands.ts");
 
-dotenv.config();
+dotenv.config({
+    path: ".dev.vars"
+});
 
 const commands = [
    HELLO
