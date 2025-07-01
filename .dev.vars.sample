@@ -1,3 +1,4 @@
 APP_ID = ""
 DISCORD_PUBLIC_KEY = ""
 DISCORD_BOT_TOKEN=""
+DB_URL="postgresql://dev_user:dev_pass@localhost:5432/postgres"
