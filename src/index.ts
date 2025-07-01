@@ -11,10 +11,10 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { verifyKey } from "discord-interactions";
 import { IRequest, Router} from "itty-router";
 import { JsonResponse } from "./utils/dtos";
-import { baseHandler } from "./base-handler";
+import { baseHandler } from "./handler";
+import { verifyDiscordRequest } from "./middleware/verifybot";
 
 const router = Router();
 
@@ -26,18 +26,6 @@ router.post("/", async (req: IRequest, env: Env, ctx: ExecutionContext)=>{
 	return await baseHandler(req, env, ctx)
 })
 
-async function verifyDiscordRequest(request: IRequest, env: Env) {
-	const signature = request.headers.get('x-signature-ed25519');
-	const timestamp = request.headers.get('x-signature-timestamp');
-	const body = await request.clone().arrayBuffer();
-	
-	if(!signature || !timestamp){
-		return false;
-	}
-
-	return verifyKey(body, signature, timestamp, env.DISCORD_PUBLIC_KEY);
-}
-
 export default {
 	async fetch(request: IRequest, env: any, ctx: any){
 		if(request.method == "POST"){
@@ -47,7 +35,7 @@ export default {
 			)
 			
 			if (!isValid) {
-				return new JsonResponse({error: "BadRequest"}, { status: 401 });
+				return new JsonResponse({error: "Unauthorized"}, { status: 401 });
 			}
 			
 			console.info("Request verified successfully");
