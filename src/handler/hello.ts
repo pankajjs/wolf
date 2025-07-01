@@ -1,5 +1,5 @@
 import { InteractionResponseType } from "discord-interactions"
-import { JsonResponse } from "../utils/dtos"
+import { JsonResponse } from "../dtos/response"
 
 export const hello = (userId: string) => {
     return new JsonResponse({
