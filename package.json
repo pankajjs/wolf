@@ -2,17 +2,27 @@
 	"name": "doto",
 	"version": "0.0.0",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
 		"start": "wrangler dev",
 		"test": "vitest",
-		"cf-typegen": "wrangler types"
+		"cf-typegen": "wrangler types",
+		"register": "node src/register.js",
+		"ngrok": "npx ngrok http 8787"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.8.19",
+		"@types/node": "^24.0.8",
 		"typescript": "^5.5.2",
 		"vitest": "~3.2.0",
 		"wrangler": "^4.22.0"
+	},
+	"dependencies": {
+		"discord-interactions": "^4.3.0",
+		"dotenv": "^17.0.0",
+		"itty-router": "^5.0.18",
+		"ts-node": "^10.9.2"
 	}
 }
