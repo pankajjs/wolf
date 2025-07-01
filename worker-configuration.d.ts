@@ -7,6 +7,8 @@ declare namespace Cloudflare {
 }
 interface Env extends Cloudflare.Env {
     DISCORD_PUBLIC_KEY: string
+    APP_ID: string
+    DISCORD_BOT_TOKEN: string
 }
 
 // Begin runtime types
