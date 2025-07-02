@@ -7,11 +7,4 @@ export const HELLO = {
 export const SIGNUP = {
     name: "signup",
     description: "Create an account to manage todos",
-    options: [
-        {   name: "user",
-            type: 3,
-            description: "Please enter your name",
-            required: true
-        }
-    ]
 }
