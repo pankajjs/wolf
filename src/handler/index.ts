@@ -1,8 +1,9 @@
 import { InteractionResponseType, InteractionType } from "discord-interactions";
 import { IRequest } from "itty-router";
 import { JsonResponse } from "../dtos/response";
-import { HELLO } from "../dtos/commands";
+import { HELLO, SIGNUP } from "../dtos/commands";
 import { hello } from "./hello";
+import { signup } from "./signup";
 
 export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext) => {
     const interaction = await req.json() as any;
@@ -18,6 +19,8 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
         switch(interaction.data.name.toLowerCase()){
             case HELLO.name.toLowerCase():
                 return hello(interaction.member.user.id);
+            case SIGNUP.name.toLowerCase():
+               return signup(interaction.member.user.id, env);
             default:
                 return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }
