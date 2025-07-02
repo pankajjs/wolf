@@ -1,5 +1,5 @@
 const dotenv = require("dotenv");
-const { HELLO, SIGNUP } = require("./dtos/commands.ts");
+const { HELLO, SIGNUP, ADD_TODO, EDIT_TODO, DELETE_TODO, TODO } = require("./dtos/commands.ts");
 
 dotenv.config({
     path: ".dev.vars"
@@ -7,7 +7,11 @@ dotenv.config({
 
 const commands = [
    HELLO,
-   SIGNUP
+   SIGNUP,
+   ADD_TODO,
+   EDIT_TODO,
+   DELETE_TODO,
+   TODO
 ];
 
 async function registerCommands(appId, discordToken, commands) {
