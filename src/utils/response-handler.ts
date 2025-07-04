@@ -1,12 +1,18 @@
 import { InteractionResponseFlags, InteractionResponseType } from "discord-interactions";
 import { JsonResponse } from "../dtos/response";
 
-export const handleDiscordResponse = (content: string, status: number, flag?: InteractionResponseFlags) => {
+type ResponseArgs = {
+    content: string, 
+    type?: number,
+    flag?: InteractionResponseFlags
+}
+
+export const handleDiscordResponse = ({content, type = InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE, flag}: ResponseArgs) => {
     return new JsonResponse({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        type,
         data: {
             content,
             flag,
         }
-    }, {status})
+    })
 }

@@ -1,11 +1,7 @@
-import { InteractionResponseType } from "discord-interactions"
-import { JsonResponse } from "../dtos/response"
+import { handleDiscordResponse } from "../utils/response-handler"
 
 export const hello = (userId: string) => {
-    return new JsonResponse({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data : {
-            content: `Hello <@${userId}>, You have executed your first command.`
-        }
-    })
+    return handleDiscordResponse({
+        content: `Hello <@${userId}>, You have executed your first command.`,
+    });
 }

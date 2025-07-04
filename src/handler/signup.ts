@@ -4,19 +4,25 @@ import { createUser, findUser } from '../dao/users';
 export const signup = async (discordId: string, env: Env) => {
     try{
         let content = "";
-        const {found, user} = await findUser(discordId, env);
-
+        const { found } = await findUser(discordId, env);
+        
         if(found){
             content = `Hi <@${discordId}>, You already have an account.`;
-            return handleDiscordResponse(content, 409);
+            return handleDiscordResponse({
+                content,
+            });
         }
 
         content = `Hi <@${discordId}, You have successfully created an account.`;
         await createUser(discordId, env);
         
-        return handleDiscordResponse(content, 201);
+        return handleDiscordResponse({
+            content,
+        });
     }catch(error){
         console.error(`(signup): Error while creating user`, error)
-        return handleDiscordResponse("Something went wrong! Please try again", 500);
+        return handleDiscordResponse({
+            content: "Something went wrong! Please try again",
+        });
     }
 }
