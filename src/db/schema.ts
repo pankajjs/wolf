@@ -12,7 +12,7 @@ export const users = pgTable("users", {
 })
 
 export const todos = pgTable("todos", {
-    id: integer().primaryKey(),
+    id: integer().primaryKey().generatedAlwaysAsIdentity({increment: 1}),
     title: varchar({length: 50}).notNull(),
     description: varchar({length: 100}),
     priority: varchar({enum: ["HIGH", "MEDIUM", "LOW"]}).default("LOW"),

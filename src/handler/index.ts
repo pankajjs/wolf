@@ -1,26 +1,36 @@
 import { InteractionResponseType, InteractionType } from "discord-interactions";
 import { IRequest } from "itty-router";
 import { JsonResponse } from "../dtos/response";
-import { HELLO, SIGNUP } from "../dtos/commands";
+import { ADD_TODO, HELLO, SIGNUP } from "../dtos/commands";
 import { hello } from "./hello";
 import { signup } from "./signup";
+import { addTodo } from "./add-todo";
+import { Message, Priority } from "../dtos/todos";
 
 export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext) => {
-    const interaction = await req.json() as any;
+    const message = await req.json() as Message;
 
-    if(interaction.type === InteractionType.PING){
+    if(message.type === InteractionType.PING){
 		return new JsonResponse(
 			{
 			type : InteractionResponseType.PONG
 		}, {status: 200});
 	}
+    
+    const discordId = message.member.user.id;
 
-    if(interaction.type === InteractionType.APPLICATION_COMMAND){
-        switch(interaction.data.name.toLowerCase()){
+    if(message.type === InteractionType.APPLICATION_COMMAND){
+        switch(message.data.name.toLowerCase()){
             case HELLO.name.toLowerCase():
-                return hello(interaction.member.user.id);
+                return hello(discordId);
             case SIGNUP.name.toLowerCase():
-               return signup(interaction.member.user.id, env);
+               return signup(discordId, env);
+            case ADD_TODO.name.toLowerCase():
+                return addTodo(discordId, {
+                    name: message.data.options[0].value,
+                    priority: message.data.options[1].value as Priority,
+                    description: message.data.options.length > 2 ? message.data.options[2].value : ""
+                }, env);
             default:
                 return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }
