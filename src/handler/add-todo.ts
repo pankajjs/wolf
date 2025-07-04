@@ -1,9 +1,10 @@
 import { createTodo } from "../dao/todos";
 import { findUser } from "../dao/users";
 import { CreateTodoDto } from "../dtos/todos";
+import { createTodoTable } from "../utils/helper";
 import { handleDiscordResponse } from "../utils/response-handler";
 
-export const addTodo = async (discordId: string, todo: CreateTodoDto, env: Env) => {
+export const addTodo = async (discordId: string, todoDto: CreateTodoDto, env: Env) => {
     try{
         
         const {found} = await findUser(discordId, env);
@@ -14,7 +15,7 @@ export const addTodo = async (discordId: string, todo: CreateTodoDto, env: Env) 
             });
         }
 
-        const { name, priority, description } = todo;
+        const { name, priority, description } = todoDto;
         const priorities = ["LOW", "HIGH", "MEDIUM"]
         
         if(name.length > 50 || description && description.length > 100 || !priorities.includes(priority)){
@@ -23,10 +24,11 @@ export const addTodo = async (discordId: string, todo: CreateTodoDto, env: Env) 
             });
         }
 
-        await createTodo(discordId, todo, env);
-
+        const todo = await createTodo(discordId, todoDto, env);
+        const table = createTodoTable([todo]);
+        
         return handleDiscordResponse({
-                content: "Created a todo successfully",
+            content: "Here are your todo:\n```" + table + "```",
         });
     }catch(error){
         console.error(`(addTodo): Error while creating todo`, error);
