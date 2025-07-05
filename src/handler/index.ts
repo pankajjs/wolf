@@ -1,7 +1,7 @@
 import { InteractionResponseType, InteractionType } from "discord-interactions";
 import { IRequest } from "itty-router";
 import { JsonResponse } from "../dtos/response";
-import { ADD_TODO, DELETE_TODO, EDIT_TODO, HELLO, SIGNUP, TODO } from "../dtos/commands";
+import { ADD_TODO, DELETE_TODO, EDIT_TODO, HELLO, SIGNUP, TODO, TodoDetails } from "../dtos/commands";
 import { hello } from "./hello";
 import { signup } from "./signup";
 import { addTodo } from "./add-todo";
@@ -11,6 +11,7 @@ import { findUser } from "../dao/users";
 import { handleDiscordResponse } from "../utils/response-handler";
 import { editTodo } from "./edit-todo";
 import { getAllTodos } from "./get-todos";
+import { getTodo } from "./todo-details";
 
 export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext) => {
     const message = await req.json() as Message;
@@ -68,6 +69,8 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
                     if(o.name === "sort") query.sort;
                 })
                 return await getAllTodos(query, env);
+            case TodoDetails.name.toLowerCase():
+                return await getTodo(Number(message.data.options[0].value), env);
             default:
                 return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }
