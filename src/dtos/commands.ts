@@ -153,3 +153,16 @@ export const TODO = {
         },
     ]
 }
+
+export const TodoDetails = {
+    name: "todo-detail",
+    description: "Returns a single todo by id",
+    options: [
+        {
+            name: "id",
+            description: "Id of a todo",
+            type: 4,
+            required: true,
+        },
+    ]
+}
