@@ -113,7 +113,7 @@ export const TODO = {
     options: [
         {
             name: "priority",
-            description: "Priority of todo",
+            description: "Priority of todos",
             type: 3,
             required: false,
             choices: [
@@ -124,7 +124,7 @@ export const TODO = {
         },
         {
             name: "status",
-            description: "Status of todo",
+            description: "Status of todos",
             type: 3,
             required: false,
             choices: [
@@ -135,7 +135,7 @@ export const TODO = {
         },
         {
             name: "progress",
-            description: "Progress of todo",
+            description: "Returns todos with progress less than given value.",
             type: 4,
             required: false,
             max_value: 100,
