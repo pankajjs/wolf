@@ -37,3 +37,10 @@ export type EditTodoDto = {
     status?: Status,
     progress?: number
 }
+
+export type GetAllTodosQuery = {
+    priority?: Priority
+    status?: Status,
+    progress?: number
+    sort?: string
+}
