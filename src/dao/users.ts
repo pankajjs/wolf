@@ -4,10 +4,7 @@ import { eq } from "drizzle-orm";
 
 export const findUser = async (discordId: string, env: Env) => {
     try{
-
-        const db = drizzle(env.DB_URL);
-
-        const res = await db.select().from(users).where(eq(users.discordId, discordId));
+        const res = await drizzle(env.DB_URL).select().from(users).where(eq(users.discordId, discordId));
         
         if(res.length == 1){
             return {
@@ -28,9 +25,7 @@ export const findUser = async (discordId: string, env: Env) => {
 
 export const createUser = async (discordId: string, env: Env) => {
     try{
-        const db = drizzle(env.DB_URL);
-    
-        const res = await db.insert(users).values({
+        const res = await drizzle(env.DB_URL).insert(users).values({
             discordId,
             updatedAt: Date.now(),
             createdAt: Date.now(),

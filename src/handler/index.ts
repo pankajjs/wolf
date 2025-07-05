@@ -1,12 +1,15 @@
 import { InteractionResponseType, InteractionType } from "discord-interactions";
 import { IRequest } from "itty-router";
 import { JsonResponse } from "../dtos/response";
-import { ADD_TODO, DELETE_TODO, HELLO, SIGNUP } from "../dtos/commands";
+import { ADD_TODO, DELETE_TODO, EDIT_TODO, HELLO, SIGNUP } from "../dtos/commands";
 import { hello } from "./hello";
 import { signup } from "./signup";
 import { addTodo } from "./add-todo";
-import { Message, Priority } from "../dtos/todos";
+import { EditTodoDto, Message, Priority, Status } from "../dtos/todos";
 import { deleteTodo } from "./delete-todo";
+import { findUser } from "../dao/users";
+import { handleDiscordResponse } from "../utils/response-handler";
+import { editTodo } from "./edit-todo";
 
 export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext) => {
     const message = await req.json() as Message;
@@ -21,11 +24,22 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
     const discordId = message.member.user.id;
 
     if(message.type === InteractionType.APPLICATION_COMMAND){
-        switch(message.data.name.toLowerCase()){
-            case HELLO.name.toLowerCase():
-                return hello(discordId);
-            case SIGNUP.name.toLowerCase():
-               return await signup(discordId, env);
+        const commandName = message.data.name.toLowerCase();
+        if(commandName === HELLO.name.toLowerCase()){
+            return hello(discordId);
+        }else if(commandName === SIGNUP.name.toLowerCase()){
+            return await signup(discordId, env);
+        }
+        
+        const {found} = await findUser(discordId, env);
+
+        if(!found){
+            return handleDiscordResponse({
+                content: "Please create an account with /signup command", 
+            });
+        }
+
+        switch(commandName){
             case ADD_TODO.name.toLowerCase():
                 return await addTodo(discordId, {
                     name: message.data.options[0].value,
@@ -34,6 +48,16 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
                 }, env);
             case DELETE_TODO.name.toLowerCase():
                 return await deleteTodo(discordId, message.data.options[0].value, env);
+            case EDIT_TODO.name.toLowerCase():
+                const editTodoDto: EditTodoDto = {id: Number(message.data.options[0].value)};
+                message.data.options.forEach((o)=>{
+                    if(o.name === "title") editTodoDto.title = o.value;
+                    if(o.name === "description") editTodoDto.description = o.value;
+                    if(o.name === "priority") editTodoDto.priority = o.value as Priority;
+                    if(o.name === "status") editTodoDto.status = o.value as Status;
+                    if(o.name === "progress") editTodoDto.progress = Number(o.value);
+                })
+                return await editTodo(editTodoDto, env);
             default:
                 return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }

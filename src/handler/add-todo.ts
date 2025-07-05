@@ -1,19 +1,9 @@
 import { createTodo } from "../dao/todos";
-import { findUser } from "../dao/users";
 import { CreateTodoDto } from "../dtos/todos";
 import { handleDiscordResponse } from "../utils/response-handler";
 
 export const addTodo = async (discordId: string, todoDto: CreateTodoDto, env: Env) => {
-    try{
-        
-        const {found} = await findUser(discordId, env);
-
-        if(!found){
-            return handleDiscordResponse({
-                content: "Please create an account with /signup command", 
-            });
-        }
-
+    try{  
         const { name, priority, description } = todoDto;
         const priorities = ["LOW", "HIGH", "MEDIUM"]
         
