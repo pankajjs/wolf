@@ -12,7 +12,7 @@ export type Message = {
     data: {
         type: number,
         name: string, 
-        options: {value: string}[]
+        options: {value: string, name: string}[]
     },
     member: {user:{id: string}}
 };
@@ -27,4 +27,13 @@ export type TodoWithNull = {
     createdAt: number,
     updatedAt: number, 
     owner: string
+}
+
+export type EditTodoDto = {
+    id: number,
+    title?: string,
+    description?: string,
+    priority?: Priority,
+    status?: Status,
+    progress?: number
 }
