@@ -109,7 +109,7 @@ export const DELETE_TODO = {
 
 export const TODO = {
     name: "todos",
-    description: "Returns todos",
+    description: "Returns a table of todos",
     options: [
         {
             name: "priority",
