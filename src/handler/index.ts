@@ -65,8 +65,8 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
                 message.data.options?.forEach(o=>{
                     if (o.name === "priority") query.priority = o.value as Priority;
                     if (o.name === "status") query.status = o.value as Status;
-                    if(o.name === "progress") query.progress;
-                    if(o.name === "sort") query.sort;
+                    if (o.name === "progress") query.progress = Number(o.value);
+                    if (o.name === "sort") query.sort = o.value;
                 })
                 return await getAllTodos(query, env);
             case TodoDetails.name.toLowerCase():
