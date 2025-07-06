@@ -161,7 +161,7 @@ export const TODO = {
     ]
 }
 
-export const TodoDetails = {
+export const TODO_DETAILS = {
     name: "todo-detail",
     description: "Returns a single todo by id",
     options: [
@@ -172,4 +172,9 @@ export const TodoDetails = {
             required: true,
         },
     ]
+}
+
+export const HELP = {
+    name: "help",
+    description: "Returns list of command and one line description"
 }

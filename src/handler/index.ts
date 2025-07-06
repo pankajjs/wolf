@@ -1,7 +1,7 @@
 import { InteractionResponseType, InteractionType } from "discord-interactions";
 import { IRequest } from "itty-router";
 import { JsonResponse } from "../dtos/response";
-import { ADD_TODO, DELETE_TODO, EDIT_TODO, HELLO, SIGNUP, TODO, TodoDetails } from "../dtos/commands";
+import { ADD_TODO, DELETE_TODO, EDIT_TODO, HELLO, HELP, SIGNUP, TODO, TODO_DETAILS } from "../dtos/commands";
 import { hello } from "./hello";
 import { signup } from "./signup";
 import { addTodo } from "./add-todo";
@@ -31,6 +31,20 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
             return hello(discordId);
         }else if(commandName === SIGNUP.name.toLowerCase()){
             return await signup(discordId, env);
+        }else if(commandName === HELP.name.toLowerCase()){
+            return handleDiscordResponse({
+                content:"```" + 
+            "| Command        | Description\n" +
+            "|----------------|-----------------------------\n" +
+            "| `/hello`       | Get a welcome message\n" +
+            "| `/signup`      | Create an account\n" +
+            "| `/add-todo`    | Create a new todo\n" +
+            "| `/edit-todo`   | Edit an existing todo\n" +
+            "| `/delete-todo` | Delete a todo\n" +
+            "| `/todos`       | List all todos with filters\n" +
+            "| `/todo-detail` | View a specific todo\n" +
+            "```"
+            })
         }
         
         const {found} = await findUser(discordId, env);
@@ -70,7 +84,7 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
                     if (o.name === "page") query.page = Number(o.value);
                 })
                 return await getAllTodos(discordId, query, env);
-            case TodoDetails.name.toLowerCase():
+            case TODO_DETAILS.name.toLowerCase():
                 return await getTodo(discordId, Number(message.data.options[0].value), env);
             default:
                 return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
