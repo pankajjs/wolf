@@ -2,13 +2,19 @@ import { editTodoById, findTodoById } from "../dao/todos";
 import { EditTodoDto } from "../dtos/todos";
 import { handleDiscordResponse } from "../utils/response-handler";
 
-export const editTodo = async (editTodoDto: EditTodoDto, env: Env) => {
+export const editTodo = async (discordId: string, editTodoDto: EditTodoDto, env: Env) => {
     try{
         const {found, todo} = await findTodoById(editTodoDto.id, env);
         
         if(!found || !todo){
             return handleDiscordResponse({
                 content: `Todo not found by Id: ${editTodoDto.id}`,
+            })
+        }
+
+        if(todo.owner !== discordId){
+            return handleDiscordResponse({
+                content: "Not authorized to edit task"
             })
         }
 

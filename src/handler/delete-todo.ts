@@ -1,18 +1,24 @@
-import { deleteTodoById } from "../dao/todos";
-import { findUser } from "../dao/users";
+import { deleteTodoById, findTodoById } from "../dao/todos";
 import { handleDiscordResponse } from "../utils/response-handler";
 
-export const deleteTodo = async (discordId: string, id: string, env: Env) => {
+export const deleteTodo = async (discordId: string, id: number, env: Env) => {
     try{
-        const {found} = await findUser(discordId, env);
+        const {found, todo} = await findTodoById(id, env);
 
-        if(!found){
+        if(!found || !todo){
             return handleDiscordResponse({
-                content: "Please create an account with /signup command", 
+                content: "Not found any todo", 
             });
         }
 
-        await deleteTodoById(Number(id), env);
+        if(todo.owner != discordId){
+            return handleDiscordResponse({
+                content: "Not authorized to delete task"
+            })
+        }
+
+        await deleteTodoById(id, env);
+
         return handleDiscordResponse({
             content: "Deleted todo successfully."
         })

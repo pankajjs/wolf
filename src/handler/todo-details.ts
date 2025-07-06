@@ -1,11 +1,16 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { handleDiscordResponse } from "../utils/response-handler";
 import { todos } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
-export const getTodo = async (id: number, env: Env) => {
+export const getTodo = async (discordId: string, id: number, env: Env) => {
     try{
-        const res = await drizzle(env.DB_URL).select().from(todos).where(eq(todos.id, id));
+        const res = await drizzle(env.DB_URL).select().from(todos).where(
+            and(
+                eq(todos.id, id),
+                eq(todos.owner, discordId),
+            )
+        );
         
         if(res.length == 0){
             return handleDiscordResponse({

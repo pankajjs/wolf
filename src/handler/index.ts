@@ -49,7 +49,7 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
                     description: message.data.options.length > 2 ? message.data.options[2].value : ""
                 }, env);
             case DELETE_TODO.name.toLowerCase():
-                return await deleteTodo(discordId, message.data.options[0].value, env);
+                return await deleteTodo(discordId, Number(message.data.options[0].value), env);
             case EDIT_TODO.name.toLowerCase():
                 const editTodoDto: EditTodoDto = {id: Number(message.data.options[0].value)};
                 message.data.options.forEach((o)=>{
@@ -59,7 +59,7 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
                     if(o.name === "status") editTodoDto.status = o.value as Status;
                     if(o.name === "progress") editTodoDto.progress = Number(o.value);
                 })
-                return await editTodo(editTodoDto, env);
+                return await editTodo(discordId, editTodoDto, env);
             case TODO.name.toLowerCase():
                 const query: GetAllTodosQuery = {}
                 message.data.options?.forEach(o=>{
@@ -71,7 +71,7 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
                 })
                 return await getAllTodos(discordId, query, env);
             case TodoDetails.name.toLowerCase():
-                return await getTodo(Number(message.data.options[0].value), env);
+                return await getTodo(discordId, Number(message.data.options[0].value), env);
             default:
                 return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }
