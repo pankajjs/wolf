@@ -1,4 +1,4 @@
-# Doto - Discord Todo Bot
+# Wolf - Discord Todo Bot
 
 A Discord bot built with Cloudflare Workers that helps you manage your todos directly from Discord. Create, edit, delete, and track your tasks with ease using slash commands.
 
@@ -48,7 +48,7 @@ A Discord bot built with Cloudflare Workers that helps you manage your todos dir
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd doto
+   cd wolf
    ```
 
 2. **Install dependencies**
