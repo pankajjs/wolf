@@ -1,5 +1,5 @@
 
-import { bigserial, integer, pgTable, serial, smallint, varchar } from "drizzle-orm/pg-core";
+import { bigserial, integer, pgTable, smallint, varchar } from "drizzle-orm/pg-core";
 
 const timestamps = {
     updatedAt: bigserial("updated_at", {mode: "number"}),
