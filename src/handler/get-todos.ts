@@ -36,8 +36,10 @@ export const getAllTodos = async (discordId: string, query: GetAllTodosQuery, en
 
         const table = createTodoTable(todosRes);
 
+        const tableHeader = totalCount > 10 ? `**${10 * (query.page ? query.page - 1 : 0) + 1} - ${todosRes.length * (query.page ?? 1)} of ${totalCount} Results**` : ``
+
         return handleDiscordResponse({
-            content: `**${10 * (query.page ? query.page - 1 : 0) + 1} - ${todosRes.length * (query.page ?? 1)} of ${totalCount} Results**\n${table}`
+            content: `${tableHeader}\n${table}`
         })
     }catch(error){
         console.error("(getAllTodos): Error while fetching todos", error);
