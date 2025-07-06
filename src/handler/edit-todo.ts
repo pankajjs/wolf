@@ -17,7 +17,7 @@ export const editTodo = async (discordId: string, editTodoDto: EditTodoDto, env:
                 content: "Not authorized to edit task"
             })
         }
-
+      
         const editedTodo = await editTodoById({
             ...todo,
             description: editTodoDto.description ?? todo.description!,
