@@ -43,4 +43,5 @@ export type GetAllTodosQuery = {
     status?: Status,
     progress?: number
     sort?: string
+    page?: number
 }

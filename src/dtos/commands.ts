@@ -151,6 +151,13 @@ export const TODO = {
                 { name: "Desc", value: "DESC" },
             ]
         },
+        {
+            name: "page",
+            description: "Used for pagination",
+            type: 4,
+            required: false,
+            min_value: 1,
+        }
     ]
 }
 

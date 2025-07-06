@@ -67,8 +67,9 @@ export const baseHandler = async (req: IRequest, env: Env, ctx: ExecutionContext
                     if (o.name === "status") query.status = o.value as Status;
                     if (o.name === "progress") query.progress = Number(o.value);
                     if (o.name === "sort") query.sort = o.value;
+                    if (o.name === "page") query.page = Number(o.value);
                 })
-                return await getAllTodos(query, env);
+                return await getAllTodos(discordId, query, env);
             case TodoDetails.name.toLowerCase():
                 return await getTodo(Number(message.data.options[0].value), env);
             default:
