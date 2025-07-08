@@ -28,7 +28,7 @@ export const editTodo = async (discordId: string, editTodoDto: EditTodoDto, env:
         }, env);
 
         return handleDiscordResponse({
-            content: "**Todo edited successfully**\n" + `Id: ${editedTodo.id}\nTitle: ${editedTodo.title}\nPriority: ${editedTodo.priority}\nStatus: ${editedTodo.status}\nProgress: ${editedTodo.progress}\nDescription: ${editedTodo.description}`,
+            content: `${"```"}Id: ${editedTodo.id}\nTitle: ${editedTodo.title}\nPriority: ${editedTodo.priority}\nStatus: ${editedTodo.status}\nProgress: ${editedTodo.progress}\nDescription: ${editedTodo.description}${"```"}`,
         });
     }catch(error){
         console.error("(editTodo): Error while editing a todo by id:", error);

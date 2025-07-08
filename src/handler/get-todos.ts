@@ -36,7 +36,7 @@ export const getAllTodos = async (discordId: string, query: GetAllTodosQuery, en
 
         const table = createTodoTable(todosRes);
 
-        const tableHeader = totalCount > 10 ? `**${10 * (query.page ? query.page - 1 : 0) + 1} - ${todosRes.length * (query.page ?? 1)} of ${totalCount} Results**` : ``
+        const tableHeader = totalCount > 10 ? `**Page ${query.page ?? 1}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t${10 * (query.page ? query.page - 1 : 0) + 1} - ${todosRes.length * (query.page ?? 1)} of ${totalCount} Results**` : ``
 
         return handleDiscordResponse({
             content: `${tableHeader}\n${table}`

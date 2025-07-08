@@ -16,7 +16,7 @@ export const addTodo = async (discordId: string, todoDto: CreateTodoDto, env: En
         const todo = await createTodo(discordId, todoDto, env);
 
         return handleDiscordResponse({
-            content: "**Todo created successfully**\n" + `Id: ${todo.id}\nTitle: ${todo.title}\nPriority: ${todo.priority}\nStatus: ${todo.status}\nProgress: ${todo.progress}\nDescription: ${todo.description}`,
+            content: `${"```"}Id: ${todo.id}\nTitle: ${todo.title}\nPriority: ${todo.priority}\nStatus: ${todo.status}\nProgress: ${todo.progress}\nDescription: ${todo.description}${"```"}`,
         });
     }catch(error){
         console.error(`(addTodo): Error while creating todo`, error);

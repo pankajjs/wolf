@@ -19,7 +19,7 @@ export const getTodo = async (discordId: string, id: number, env: Env) => {
         }
         const todo = res[0];
         return handleDiscordResponse({
-            content:  "**Fetched todo successfully**\n" + `Id: ${todo.id}\nTitle: ${todo.title}\nPriority: ${todo.priority}\nStatus: ${todo.status}\nProgress: ${todo.progress}\nDescription: ${todo.description}`,
+            content:  `${"```"}Id: ${todo.id}\nTitle: ${todo.title}\nPriority: ${todo.priority}\nStatus: ${todo.status}\nProgress: ${todo.progress}\nDescription: ${todo.description}${"```"}`,
         })
     }catch(error){
         console.error(`(getTodo): Error while fetching todo by id: `, id, error);

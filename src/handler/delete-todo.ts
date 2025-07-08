@@ -20,7 +20,7 @@ export const deleteTodo = async (discordId: string, id: number, env: Env) => {
         await deleteTodoById(id, env);
 
         return handleDiscordResponse({
-            content: "Deleted todo successfully."
+            content: "Todo deleted."
         })
     }catch(error){
         console.error("(deleteTodo): Error while deleting todo with id:", id, error);
