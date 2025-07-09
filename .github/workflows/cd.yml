@@ -15,13 +15,13 @@ jobs:
         run: pnpm install
       - name: Register commands
         run: pnpm run register
+        env:
+          APP_ID: ${{ secrets.APP_ID }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        env:
-         APP_ID: ${{secrets.APP_ID}}
-         DISCORD_BOT_TOKEN: ${{secrets.DISCORD_BOT_TOKEN}}
 
 
