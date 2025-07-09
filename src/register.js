@@ -28,7 +28,7 @@ async function registerCommands(appId, discordToken, commands) {
             body: JSON.stringify(commands),
           });
         if(!res.ok){
-            console.error("Failed to register command");
+            console.error("Failed to register command", (await res.json()));
             return;
         }
         console.log("Commands registered successfully");
