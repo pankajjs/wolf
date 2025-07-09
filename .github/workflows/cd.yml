@@ -22,7 +22,6 @@ jobs:
         run: pnpm run db:push
         env:
           DB_URL: ${{ secrets.DB_URL }}
-      - name:
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
