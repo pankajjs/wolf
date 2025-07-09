@@ -17,6 +17,7 @@ const commands = [
 ];
 
 async function registerCommands(appId, discordToken, commands) {
+    console.info(`AppId: ${appId}`);
     const endpoint = `https://discord.com/api/v10/applications/${appId}/commands`
     try{
         const res = await fetch(endpoint, {
