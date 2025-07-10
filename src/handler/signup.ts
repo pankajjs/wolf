@@ -1,28 +1,17 @@
-import { handleDiscordResponse } from '../utils/response-handler';
-import { createUser, findUser } from '../dao/users';
+import { Message } from '../dtos/types';
+import { saveUser } from '../service';
+import { handleDiscordResponse } from '../utils';
 
-export const signup = async (discordId: string, env: Env) => {
-    try{
-        let content = "";
-        const { found } = await findUser(discordId, env);
-        
-        if(found){
-            content = `Hi <@${discordId}>, You already have an account.`;
-            return handleDiscordResponse({
-                content,
-            });
-        }
+export const signup = async (msg: Message, env: Env, ctx: ExecutionContext) => {
+    ctx.waitUntil(saveUser({
+        env,
+        appId: msg.application_id,
+        discordId: msg.member.user.id,
+        token: msg.token
+    }))
 
-        content = `Hi <@${discordId}, You have successfully created an account.`;
-        await createUser(discordId, env);
-        
-        return handleDiscordResponse({
-            content,
-        });
-    }catch(error){
-        console.error(`(signup): Error while creating user`, error)
-        return handleDiscordResponse({
-            content: "Something went wrong! Please try again",
-        });
-    }
+    return handleDiscordResponse({
+        content: "Request is being processed",
+    });
+
 }

@@ -1,31 +1,18 @@
-import { deleteTodoById, findTodoById } from "../dao/todos";
-import { handleDiscordResponse } from "../utils/response-handler";
+import { Message } from "../dtos/types";
+import { handleDiscordResponse } from "../utils";
+import * as service from "../service";
 
-export const deleteTodo = async (discordId: string, id: number, env: Env) => {
-    try{
-        const {found, todo} = await findTodoById(id, env);
+export const deleteTodo = async (msg: Message, env: Env, ctx: ExecutionContext) => {
 
-        if(!found || !todo){
-            return handleDiscordResponse({
-                content: "Not found any todo", 
-            });
-        }
+    ctx.waitUntil(service.deleteTodo({
+        appId: msg.application_id,
+        token: msg.token,
+        discordId: msg.member.user.id,
+        env,
+        id: Number(msg.data.options?.[0].value)
+    }))
 
-        if(todo.owner != discordId){
-            return handleDiscordResponse({
-                content: "Not authorized to delete task"
-            })
-        }
-
-        await deleteTodoById(id, env);
-
-        return handleDiscordResponse({
-            content: "Todo deleted."
-        })
-    }catch(error){
-        console.error("(deleteTodo): Error while deleting todo with id:", id, error);
-        return handleDiscordResponse({
-            content: "Something went wrong! Please try again",
-        })
-    }
+    return handleDiscordResponse({
+        content: "Request is being processed"
+    })
 }

@@ -1,4 +1,4 @@
-import { TodoWithNull } from "../dtos/todos";
+import { TodoWithNull } from "../dtos/types";
 
 export const createTodoTable = (todos: TodoWithNull[]) => {
     let table = "Id        | Priority | Status       | Progress(%) | Title \n";

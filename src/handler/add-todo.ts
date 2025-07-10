@@ -1,27 +1,22 @@
-import { createTodo } from "../dao/todos";
-import { CreateTodoDto } from "../dtos/todos";
-import { handleDiscordResponse } from "../utils/response-handler";
+import { Message, Priority } from "../dtos/types";
+import { saveTodo } from "../service";
+import { handleDiscordResponse } from "../utils";
 
-export const addTodo = async (discordId: string, todoDto: CreateTodoDto, env: Env) => {
-    try{  
-        const { name, priority, description } = todoDto;
-        const priorities = ["LOW", "HIGH", "MEDIUM"]
-        
-        if(name.length > 50 || description && description.length > 100 || !priorities.includes(priority)){
-            return handleDiscordResponse({
-                content: "Invalid data",
-            });
+export const addTodo = async (msg: Message, env: Env, ctx: ExecutionContext) => {
+    
+    ctx.waitUntil(saveTodo({
+        appId: msg.application_id,
+        token: msg.token,
+        env,
+        discordId: msg.member.user.id,
+        todoDto: {
+            name: msg.data.options?.[0].value!,
+            priority: msg.data.options?.[1].value as Priority,
+            description: msg.data.options?.length! > 2 ? msg?.data.options?.[2].value : ""
         }
-
-        const todo = await createTodo(discordId, todoDto, env);
-
-        return handleDiscordResponse({
-            content: `${"```"}Id: ${todo.id}\nTitle: ${todo.title}\nPriority: ${todo.priority}\nStatus: ${todo.status}\nProgress: ${todo.progress}\nDescription: ${todo.description}${"```"}`,
-        });
-    }catch(error){
-        console.error(`(addTodo): Error while creating todo`, error);
-        return handleDiscordResponse({
-            content: "Something went wrong! Please try again",
-        });
-    }
+    }))
+    
+    return handleDiscordResponse({
+        content: "Request is being processed"
+    });
 }

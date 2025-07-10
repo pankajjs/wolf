@@ -1,39 +1,27 @@
-import { editTodoById, findTodoById } from "../dao/todos";
-import { EditTodoDto } from "../dtos/todos";
-import { handleDiscordResponse } from "../utils/response-handler";
+import { EditTodoDto, Message, Priority, Status } from "../dtos/types";
+import { editTodoDetails } from "../service";
+import { handleDiscordResponse } from "../utils";
 
-export const editTodo = async (discordId: string, editTodoDto: EditTodoDto, env: Env) => {
-    try{
-        const {found, todo} = await findTodoById(editTodoDto.id, env);
-        
-        if(!found || !todo){
-            return handleDiscordResponse({
-                content: `Todo not found by Id: ${editTodoDto.id}`,
-            })
-        }
-
-        if(todo.owner !== discordId){
-            return handleDiscordResponse({
-                content: "Not authorized to edit task"
-            })
-        }
-      
-        const editedTodo = await editTodoById({
-            ...todo,
-            description: editTodoDto.description ?? todo.description!,
-            priority: editTodoDto.priority ?? todo.priority!,
-            progress: editTodoDto.progress ??  todo.progress!,
-            status: editTodoDto.status ?? todo.status!,
-            title: editTodoDto.title ?? todo.title
-        }, env);
-
-        return handleDiscordResponse({
-            content: `${"```"}Id: ${editedTodo.id}\nTitle: ${editedTodo.title}\nPriority: ${editedTodo.priority}\nStatus: ${editedTodo.status}\nProgress: ${editedTodo.progress}\nDescription: ${editedTodo.description}${"```"}`,
-        });
-    }catch(error){
-        console.error("(editTodo): Error while editing a todo by id:", error);
-        return handleDiscordResponse({
-            content: "Something went wrong! Please try again",
-        })
-    }
+export const editTodo = async (msg: Message, env: Env, ctx: ExecutionContext) => {
+    
+    const editTodoDto: EditTodoDto = {id: Number(msg.data.options?.[0].value)};
+    msg.data.options?.forEach((o)=>{
+        if(o.name === "title") editTodoDto.title = o.value;
+        if(o.name === "description") editTodoDto.description = o.value;
+        if(o.name === "priority") editTodoDto.priority = o.value as Priority;
+        if(o.name === "status") editTodoDto.status = o.value as Status;
+        if(o.name === "progress") editTodoDto.progress = Number(o.value);
+    })
+    
+    ctx.waitUntil(editTodoDetails({
+        appId: msg.application_id,
+        discordId: msg.member.user.id,
+        env,
+        token: msg.token,
+        editTodoDto,
+    }));
+    
+    return handleDiscordResponse({
+        content: "Request is being processed."
+    })
 }

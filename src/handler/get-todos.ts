@@ -1,50 +1,27 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { GetAllTodosQuery } from "../dtos/todos";
-import { handleDiscordResponse } from "../utils/response-handler";
-import { todos } from "../db/schema";
-import { and, asc, count, desc, eq, gte, inArray, lte, } from "drizzle-orm";
-import { createTodoTable } from "../utils/helper";
+import { GetAllTodosQuery, Message, Priority, Status } from "../dtos/types";
+import { handleDiscordResponse } from "../utils";
+import * as service from "../service"
 
-export const getAllTodos = async (discordId: string, query: GetAllTodosQuery, env: Env) => {
-    try{
-        const db = drizzle(env.DB_URL);
-        
-        const totalCount = (await db.select({count:count()}).from(todos).where(eq(todos.owner, discordId)))[0].count;
+export const getAllTodos = async (msg:Message, env: Env, ctx: ExecutionContext) => {
+    const query: GetAllTodosQuery = {}
 
-        const todosRes = await db
-                .select()
-                .from(todos)
-                .where(
-                    and(
-                        query.priority ? eq(todos.priority, query.priority): inArray(todos.priority, ["LOW", "HIGH", "MEDIUM"]) ,
-                        query.status ? eq(todos.status, query.status): inArray(todos.status, ["DONE", "IN_PROGRESS", "NOT_STARTED"]),
-                        query.progress ? lte(todos.progress, query.progress) : gte(todos.progress, 0),
-                        eq(todos.owner, discordId)
-                    )
-                )
-                .offset(((query.page ?? 1) - 1) * 10)
-                .limit(10) // temporary hardcoded, default value: 10
-                .orderBy(
-                    query.sort === "DESC" ? desc(todos.updatedAt) : asc(todos.updatedAt)
-                )
+    msg.data.options?.forEach(o=>{
+        if (o.name === "priority") query.priority = o.value as Priority;
+        if (o.name === "status") query.status = o.value as Status;
+        if (o.name === "progress") query.progress = Number(o.value);
+        if (o.name === "sort") query.sort = o.value;
+        if (o.name === "page") query.page = Number(o.value);
+    })
+    
+    ctx.waitUntil(service.getAllTodos({
+        appId: msg.application_id,
+        token: msg.token,
+        discordId: msg.member.user.id,
+        env, 
+        query,
+    }));
 
-        if(todosRes.length === 0){
-            return handleDiscordResponse({
-                content: "Not found any todos",
-            })
-        }
-
-        const table = createTodoTable(todosRes);
-
-        const tableHeader = totalCount > 10 ? `**Page ${query.page ?? 1}\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t${10 * (query.page ? query.page - 1 : 0) + 1} - ${todosRes.length * (query.page ?? 1)} of ${totalCount} Results**` : ``
-
-        return handleDiscordResponse({
-            content: `${tableHeader}\n${table}`
-        })
-    }catch(error){
-        console.error("(getAllTodos): Error while fetching todos", error);
-        return handleDiscordResponse({
-            content: "Something went wrong! Please try again",
-        })
-    }
+    return handleDiscordResponse({
+        content: "Request is being processed."
+    })
 }

@@ -1,6 +1,6 @@
 import { verifyKey } from "discord-interactions";
 import { IRequest } from "itty-router";
-import { JsonResponse } from "../dtos/response";
+import { JsonResponse } from "../dtos/types";
 
 export const verifyDiscordRequest = async (request: IRequest, env: Env) => {
     try{

@@ -1,4 +1,4 @@
-import { handleDiscordResponse } from "../utils/response-handler"
+import { handleDiscordResponse } from "../utils"
 
 export const hello = (userId: string) => {
     return handleDiscordResponse({

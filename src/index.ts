@@ -12,7 +12,7 @@
  */
 
 import { IRequest, Router} from "itty-router";
-import { JsonResponse } from "./dtos/response";
+import { JsonResponse } from "./dtos/types";
 import { baseHandler } from "./handler";
 import { verifyDiscordRequest } from "./middleware/verifybot";
 
